@@ -9,7 +9,7 @@ This bundle serves as a template for creating a new Kafka onlne bundle.
 ## Installing Bundle
 
 ```bash
-install_bundle -download bundle-kafka-template
+install_bundle -download bundle-kafka-3-examples-python
 ```
 
 ## Use Case
