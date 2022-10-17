@@ -20,6 +20,9 @@ buildNumber.properties
 # vi
 *.swp
 
+# Python
+__pycache__
+
 # PadoGrid workspace
 /.addonenv.sh
 /initenv.sh
@@ -32,7 +35,7 @@ workspace.code-workspace
 .ipynb_checkpoints
 
 # PadoGrid workspace directories
-apps
+#apps
 clusters
 docker
 groups
@@ -57,3 +60,6 @@ results
 *.sh0
 pom.xml0
 build
+perf_test*
+kryo_codegen
+examples
