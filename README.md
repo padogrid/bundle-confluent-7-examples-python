@@ -9,12 +9,12 @@ This bundle provides Kafka Python client examples running on JupyterLab in PadoG
 ## Installing Bundle
 
 ```bash
-install_bundle -download -workspace bundle-kafka-examples-python
+install_bundle -download -workspace bundle-kafka-3-examples-python
 ```
 
 ## Use Case
 
-This bundle provides step-by-step instructions for creating a JupyterLab environment in PadoGrid and executing Kafka Python clients in Jupyter Notebook that writes and reads to/from a local Kafka cluster.
+This bundle provides step-by-step instructions for creating a JupyterLab environment in PadoGrid and executing Kafka Python clients in Jupyter Notebook that writes and reads to/from a local Kafka cluster. It relies on Confluent Schema Registry for serializing Avro data. As such, it requires Confluent installation. Note that we can run the cluster and clients using either Kafka or Confluent. We need Confluent only for Schema Registry.
 
 ![Jupyter Notebooks](images/confluent-examples.drawio.png)
 
@@ -24,6 +24,8 @@ This bundle provides step-by-step instructions for creating a JupyterLab environ
 - Confluent 7.0.0+
 - Python
 - JupyterLab
+
+:pencil2: Confluent v7.2.2 seems to have a bug that prevents the storage from being created. Please use another version.
 
 ## Installing JupyterLab
 
@@ -108,7 +110,7 @@ cd_app perf_test/bin_sh
 ./test_group -run -prop ../etc/group-factory.properties
 ```
 
-You should see outpus from the `subscribe_topic` command similar to the following.
+You should see outputs from the `subscribe_topic` command similar to the following.
 
 ```console
 ...
@@ -120,7 +122,7 @@ k0000000124: {"createdOnMillis": 1665875842099, "updatedOnMillis": 1665875842099
 
 10. Run Jupyter Notebook examples
 
-- Change folder: apps/python_examples
+- Change folder: `apps/python_examples`
 - Open and run `consumer_perf_test.ipynb`
 - Open and run `producer_customer.ipynb`
 - Open and run `producer_order.ipynb`
@@ -138,7 +140,7 @@ Subscribe `nw.orders`
 
 ```bash
 cd_app python_examples
-./consumer_perf_test.py -f etc/kafka-order.properties -t nw.orders
+./consumer_perf_test.py -f etc/kafka-consumer.properties -t nw.orders
 ```
 
 Ingest data into `nw.customers`
@@ -152,7 +154,7 @@ Ingest data into `nw.orders`
 
 ```bash
 cd_app python_examples
-bash-3.2$ ./producer_customer.py -f etc/kafka-producer.properties -t nw.customers
+./producer_customer.py -f etc/kafka-producer.properties -t nw.customers
 ```
 
 ## Confluent Examples
@@ -305,12 +307,6 @@ curl -sX DELETE http://localhost:8081/subjects/$TOPIC-value/versions/3 | jq .
 ```bash
 curl -sX DELETE http://localhost:8081/subjects/$TOPIC-value | jq .
 ```
-
-14. Run Python examples
-
-- Change folder: apps/python_examples
-- Open and run `consumer.ipynb`
-- Open and run `publisher.ipynb`
 
 ## Teardown
 

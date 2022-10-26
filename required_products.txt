@@ -15,6 +15,7 @@
 #
 
 kafka=3
+confluent=7
 #coherence=
 #gemfire=
 #geode=
