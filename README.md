@@ -128,6 +128,8 @@ cd_app perf_test/bin_sh
 - Open and run `producer_customer.ipynb`
 - Open and run `producer_order.ipynb`
 
+:pencil2: The `ccloud_lib.py` file found in `apps/python_examples` is part of the Confluent examples downlodable from the Confluent GitHub repo. Please see the [Confluent Examples](#Confluent-Examples) section for details.
+
 11. Run Python from termimal
 
 Subscribe `nw.customers`
