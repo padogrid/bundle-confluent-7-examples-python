@@ -16,7 +16,7 @@ install_bundle -download -workspace bundle-confluent-7-examples-python
 
 This bundle provides step-by-step instructions for creating a JupyterLab environment in PadoGrid and executing Kafka Python clients in Jupyter Notebook that writes and reads to/from a local Kafka cluster. It relies on Confluent Schema Registry for serializing Avro data. As such, it requires Confluent installation. Note that we can run the cluster and clients using either Kafka or Confluent. We need Confluent only for running Schema Registry.
 
-![Jupyter Notebooks](images/confluent-examples.drawio.png)
+![Confluent Python Examples](images/confluent-examples-python.drawio.png)
 
 ## Required Software
 
