@@ -14,7 +14,7 @@ install_bundle -download -workspace bundle-confluent-7-examples-python
 
 ## Use Case
 
-This bundle provides step-by-step instructions for creating a JupyterLab environment in PadoGrid and executing Kafka Python clients in Jupyter Notebook that writes and reads to/from a local Kafka cluster. It relies on Confluent Schema Registry for serializing Avro data. As such, it requires Confluent installation. Note that we can run the cluster and clients using either Kafka or Confluent. We need Confluent only for Schema Registry.
+This bundle provides step-by-step instructions for creating a JupyterLab environment in PadoGrid and executing Kafka Python clients in Jupyter Notebook that writes and reads to/from a local Kafka cluster. It relies on Confluent Schema Registry for serializing Avro data. As such, it requires Confluent installation. Note that we can run the cluster and clients using either Kafka or Confluent. We need Confluent only for running Schema Registry.
 
 ![Jupyter Notebooks](images/confluent-examples.drawio.png)
 
@@ -65,13 +65,7 @@ start_cluster
 schema-registry-start $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
 ```
 
-5. Start Confluent Control Center
-
-```bash
-control-center-start $CONFLUENT_HOME/etc/confluent-control-center/control-center.properties
-```
-
-6. Install Kafka Python client package
+5. Install Kafka Python client package
 
 ```bash
 # Install Confluent Kafka API
@@ -82,7 +76,7 @@ pip install avro
 pip install fastavro
 ```
 
-7. Create and build `perf_test`
+6. Create and build `perf_test`
 
 PadoGrid includes `perf_test` for ingesting Avro-based mock data into Kafka.
 
@@ -92,7 +86,7 @@ cd_app perf_test/bin_sh
 ./build_app
 ```
 
-8. Subscribe topics
+7. Subscribe topics
 
 Run `subscribe_topic` to monitor data being ingested into Kafka. We will ingest data into two topics: `nw.customers` and `nw.orders`.
 
@@ -101,7 +95,7 @@ cd_app perf_test/bin_sh
 ./subscribe_topic nw.orders
 ```
 
-9. Ingest data
+8. Ingest data
 
 From another terminal, run `test_group` to ingest data into `nw.customers` and `nw.orders`.
 
@@ -120,14 +114,14 @@ k0000000124: {"createdOnMillis": 1665875842099, "updatedOnMillis": 1665875842099
 ...
 ```
 
-10. Run Jupyter Notebook examples
+9. Run Jupyter Notebook examples
 
 - Change folder: `apps/python_examples`
 - Open and run `consumer_perf_test.ipynb`
 - Open and run `producer_customer.ipynb`
 - Open and run `producer_order.ipynb`
 
-11. Run Python from termimal
+10. Run Python from termimal
 
 Subscribe `nw.customers`
 
@@ -177,6 +171,12 @@ cd_app python_examples/examples/clients/avro
 mvn clean compile package
 ```
 
+3. Start Confluent Control Center
+
+```bash
+control-center-start $CONFLUENT_HOME/etc/confluent-control-center/control-center.properties
+```
+
 4. Check Confluent Control Center
 
 - URL: http://localhost:9021
@@ -189,7 +189,8 @@ From a terminal, run the following:
 
 ```bash
 cd_app python_examples/examples/clients/avro
-mvn exec:java -Dexec.mainClass=io.confluent.examples.clients.basicavro.ConsumerExample   -Dexec.args="../../../etc/kafka-consumer.properties"
+mvn exec:java -Dexec.mainClass=io.confluent.examples.clients.basicavro.ConsumerExample \
+              -Dexec.args="../../../etc/kafka-consumer.properties"
 ```
 
 6. Run Java publisher
@@ -198,7 +199,8 @@ From a terminal, run the following:
 
 ```bash
 cd_app python_examples/examples/clients/avro
-mvn exec:java -Dexec.mainClass=io.confluent.examples.clients.basicavro.ProducerExample   -Dexec.args="../../../etc/kafka-producer.properties"
+mvn exec:java -Dexec.mainClass=io.confluent.examples.clients.basicavro.ProducerExample \
+              -Dexec.args="../../../etc/kafka-producer.properties"
 ```
 
 ## Confluent Schema Registry REST API
