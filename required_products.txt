@@ -14,7 +14,7 @@
 # then set none=1.
 #
 
-kafka=3
+#kafka=3
 confluent=7
 #coherence=
 #gemfire=
