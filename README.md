@@ -9,7 +9,7 @@ This bundle provides Kafka Python client examples running on JupyterLab in PadoG
 ## Installing Bundle
 
 ```bash
-install_bundle -download -workspace bundle-kafka-3-examples-python
+install_bundle -download -workspace bundle-confluent-7-examples-python
 ```
 
 ## Use Case
@@ -46,7 +46,7 @@ open_jupyter
 Due to JupyterLab limitations, the terminals shown in the browser are not in the PadoGrid workspace context. Execute the following in each terminal to switch to the PadoGrid workspace. Make sure to replace `<your_rwe>` with your RWE name.
 
 ```bash
-switch_rwe <your_rwe>/bundle-kafka-examples-python
+switch_rwe <your_rwe>/bundle-confluent-7-examples-python
 ```
 
 3. Start cluster
