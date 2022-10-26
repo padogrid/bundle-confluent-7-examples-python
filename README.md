@@ -86,16 +86,7 @@ cd_app perf_test/bin_sh
 ./build_app
 ```
 
-7. Subscribe topics
-
-Run `subscribe_topic` to monitor data being ingested into Kafka. We will ingest data into two topics: `nw.customers` and `nw.orders`.
-
-```bash
-cd_app perf_test/bin_sh
-./subscribe_topic nw.orders
-```
-
-8. Ingest data
+7. Ingest data
 
 From another terminal, run `test_group` to ingest data into `nw.customers` and `nw.orders`.
 
@@ -114,14 +105,30 @@ k0000000124: {"createdOnMillis": 1665875842099, "updatedOnMillis": 1665875842099
 ...
 ```
 
-9. Run Jupyter Notebook examples
+8. Subscribe topics
+
+Run `subscribe_topic` to monitor data being ingested into Kafka. We will ingest data into two topics: `nw.customers` and `nw.orders`.
+
+```bash
+cd_app perf_test/bin_sh
+./subscribe_topic nw.customers
+./subscribe_topic nw.orders
+```
+
+:pencil2: Unlike other Kafka consumer applications, `subscribe_topic` does not create topics if they do not exist. You must first create topics before you can make subscriptions. This means you must first run `test_group` to create topics and produce data before running `subscribe_topic`.
+
+9. Ingest data again to see `subscribe_topic` consuming data.
+
+- Follow Step 7
+
+10. Run Jupyter Notebook examples
 
 - Change folder: `apps/python_examples`
 - Open and run `consumer_perf_test.ipynb`
 - Open and run `producer_customer.ipynb`
 - Open and run `producer_order.ipynb`
 
-10. Run Python from termimal
+11. Run Python from termimal
 
 Subscribe `nw.customers`
 
@@ -153,6 +160,8 @@ cd_app python_examples
 
 ## Confluent Examples
 
+Confluent provides client examples that you can also try out in this tutorial. This section provides instructions for downloading and running Confluent examples. We'll focus on Java examples only.
+
 1. Clone Confluent examples
 
 Download the Confluent client examples.
@@ -171,13 +180,42 @@ cd_app python_examples/examples/clients/avro
 mvn clean compile package
 ```
 
-3. Start Confluent Control Center
+There is a bug in the `pom.xml` file that may output the following error.
+
+```console
+...
+[ERROR] 'dependencies.dependency.version' for org.slf4j:slf4j-log4j12:jar is missing. @ line 71, column 17
+[ERROR] 'dependencies.dependency.version' for io.confluent:confluent-log4j:jar is missing. @ line 76, column 17
+...
+```
+
+If you see the errors shown above, then add version numbers in the `pom.xml` as shown below.
+
+```xml
+   ...
+   <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-log4j12</artifactId>
+       <version>2.0.3</version>
+   </dependency>
+   ...
+   <dependency>
+       <groupId>io.confluent</groupId>
+       <artifactId>confluent-log4j</artifactId>
+       <version>1.2.17-cp10</version>
+   </dependency>
+   ...
+```
+
+3. Optional: Start Confluent Control Center
+
+Optionally, you can start Confluent Control Center to create and monitor topics.
 
 ```bash
 control-center-start $CONFLUENT_HOME/etc/confluent-control-center/control-center.properties
 ```
 
-4. Check Confluent Control Center
+4. Optional: Check Confluent Control Center
 
 - URL: http://localhost:9021
 - Select the **transactions** topic
