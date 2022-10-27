@@ -22,10 +22,8 @@ This bundle provides step-by-step instructions for creating a JupyterLab environ
 
 - PadoGrid 0.9.22+
 - Confluent 7.0.0+
-- Python
+- Python 3.x
 - JupyterLab
-
-:pencil2: Confluent v7.2.2 seems to have a bug that prevents the storage from being created. Please use another version.
 
 ## Installing JupyterLab
 
