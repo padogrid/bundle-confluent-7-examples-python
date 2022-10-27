@@ -119,7 +119,61 @@ cd_app perf_test/bin_sh
 
 - Follow Step 7
 
-10. Run Jupyter Notebook examples
+10. View Python source code
+
+So far, we used Java apps included in PadoGrid. Let's now turn to Python. You can view the `apps/python_examples` directory from JupyterLab or from a terminal as follows.
+
+```bash
+cd_app python_examples
+tree
+```
+
+Output:
+
+```console
+.
+├── ccloud_lib.py
+├── consumer_perf_test.ipynb
+├── consumer_perf_test.py
+├── customer.py
+├── etc
+│   ├── avro
+│   │   ├── blob.avsc
+│   │   ├── category.avsc
+│   │   ├── customer.avsc
+│   │   ├── employee-territory.avsc
+│   │   ├── employee.avsc
+│   │   ├── order-detail.avsc
+│   │   ├── order.avsc
+│   │   ├── product.avsc
+│   │   ├── region.avsc
+│   │   ├── shipper.avsc
+│   │   ├── supplier.avsc
+│   │   └── territory.avsc
+│   ├── kafka-consumer.properties
+│   └── kafka-producer.properties
+├── order.py
+├── producer_customer.py
+├── producer_order.py
+└── producer_perf_test.ipynb
+```
+
+The included files are described below.
+
+| File                            | Description                      |
+| ------------------------------- | -------------------------------- |
+| `customer.py`                   | The `Customer` class that serializes/deserializes Avro payloads. Note that Avro data fields are provided in a dictionary. |
+| `order.py`                      | The `Order` class that serializes/deserializes Avro payloads. Note that Avro data fields are provided in a dictionary.    |
+| `producer_customer.py`          | Produces `Customer` objects in the specified topic |
+| `producer_order.py`             | Produces `Order` objects in the specified topic    |
+| `consumer_perf_test.py`         | Consumes objects from the specified topic and displays them |
+| `consumer_perf_test.ipynb`      | Jupyter Notebook for running `consumer_perf_test.py` |
+| `producer_perf_test.ipynb`      | Jupyter Notebook for running `producer_perf_test.py` |
+| `etc/avro/*`                    | Avro schemas used by `perf_test`. Only `customer.asvc` and `order.avsc` are used for in this tutorial. |
+| `etc/kafka-consumer.properties` | Consumer specific properties     |
+| `etc/kafka-producer.properties` | Producer specific properties     |
+
+11. Run Jupyter Notebook examples
 
 - Change folder: `apps/python_examples`
 - Open and run `consumer_perf_test.ipynb`
@@ -128,7 +182,7 @@ cd_app perf_test/bin_sh
 
 :pencil2: The `ccloud_lib.py` file found in `apps/python_examples` is part of the Confluent examples downlodable from the Confluent GitHub repo. Please see the [Confluent Examples](#Confluent-Examples) section for details.
 
-11. Run Python from termimal
+12. Run Python from terminal
 
 Subscribe `nw.customers`
 
@@ -155,7 +209,24 @@ Ingest data into `nw.orders`
 
 ```bash
 cd_app python_examples
-./producer_customer.py -f etc/kafka-producer.properties -t nw.customers
+./producer_order.py -f etc/kafka-producer.properties -t nw.orders
+```
+
+You can also run `perf_test` to produce and consume data as before. Both Java and Python apps can produce and consume data using the topics, `nw.customers` and `nw.orders`.
+
+Consume Python generated data using `perf_test` (Java):
+
+```bash
+cd_app perf_test/bin_sh
+./subscribe_topic nw.customers
+./subscribe_topic nw.orders
+```
+
+Produce data using Java for the Python consumer:
+
+```bash
+cd_app perf_test/bin_sh
+./test_group -run -prop ../etc/group-factory.properties
 ```
 
 ## Confluent Examples
