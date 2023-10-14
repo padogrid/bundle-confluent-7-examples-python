@@ -36,23 +36,62 @@ Install JupyterLab on your machine as described in the following section in the 
 
 ## Startup Sequence
 
-1. Start JupyterLab
+### 1. Install the Kafka Python client package
+
+Before starting JupyterLab, let's first install the required Python packages. These packages are required by the Jupyter Notebook examples we will be executing later.
 
 ```bash
+# Install Confluent Kafka API
+pip install confluent-kafka
+
+# Our examples require avro
+pip install avro fastavro
+```
+
+### 2. Start JupyterLab
+
+```bash
+# Start JupyterLab in the backgroup
+start_jupyter -dashboard &
+
+# Check status
+show_jupyter
+
+# Open JupyterLab in the browser
 open_jupyter
 ```
 
-2. Switch workspace in each terminal
+JupyterLab Password: `padogrid`
 
-Due to JupyterLab limitations, the terminals shown in the browser are not in the PadoGrid workspace context. Execute the following in each terminal to switch to the PadoGrid workspace. Make sure to replace `<your_rwe>` with your RWE name.
+### 3. Switch workspace in each JupyterLab terminal
+
+Due to JupyterLab limitations, the terminals shown in the browser are not in the PadoGrid workspace context. You can get the workspace context information by executing `show_workspace` from the terminal where you executed `start_jupyter`.
 
 ```bash
-switch_rwe <your_rwe>/bundle-confluent-7-examples-python
+show_workspace
 ```
 
-3. Start cluster
+Output:
+
+```console
+...
+Switch Command:
+   switch_rwe rwe-tutorial bundle-confluent-7-examples-python
+```
+
+In JupyterLab, execute the `switch_rwe` command. With the above output, we would execute the following in each JupyterLab terminal.
+
+![Terminal](images/terminal.png) Terminal 1, Terminal2, Terminal3
+
+```bash
+switch_rwe rwe-tutorial bundle-confluent-7-examples-python
+```
+
+### 4. Start cluster
 
 From one of the terminals in the browser, create and start a Kafka cluster.
+
+![Terminal](images/terminal.png) Terminal 1
 
 ```bash
 make_cluster -product confluent
@@ -60,26 +99,20 @@ switch_cluster myconfluent
 start_cluster
 ```
 
-4. Start Confluent Schema Registry
+### 5. Start Confluent Schema Registry
+
+![Terminal](images/terminal.png) Terminal 3
 
 ```bash
+# The following command blocks. 
 schema-registry-start $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
 ```
 
-5. Install Kafka Python client package
-
-```bash
-# Install Confluent Kafka API
-pip install confluent-kafka
-
-# Our examples require avro
-pip install avro
-pip install fastavro
-```
-
-6. Create and build `perf_test`
+### 6. Create and build `perf_test`
 
 PadoGrid includes `perf_test` for ingesting Avro-based mock data into Kafka.
+
+![Terminal](images/terminal.png) Terminal 1
 
 ```bash
 create_app -product kafka
@@ -87,9 +120,11 @@ cd_app perf_test/bin_sh
 ./build_app
 ```
 
-7. Ingest data
+### 7. Ingest data
 
-From another terminal, run `test_group` to ingest data into `nw.customers` and `nw.orders`.
+From Terminal 2, run `test_group` to ingest data into `nw.customers` and `nw.orders`.
+
+![Terminal](images/terminal.png) Terminal 2
 
 ```bash
 cd_app perf_test/bin_sh
@@ -106,9 +141,11 @@ k0000000124: {"createdOnMillis": 1665875842099, "updatedOnMillis": 1665875842099
 ...
 ```
 
-8. Subscribe topics
+### 8. Subscribe topics
 
 Run `subscribe_topic` to monitor data being ingested into Kafka. We will ingest data into two topics: `nw.customers` and `nw.orders`.
+
+![Terminal](images/terminal.png) Terminal 1
 
 ```bash
 cd_app perf_test/bin_sh
@@ -118,13 +155,15 @@ cd_app perf_test/bin_sh
 
 :pencil2: Unlike other Kafka consumer applications, `subscribe_topic` does not create topics if they do not exist. You must first create topics before you can make subscriptions. This means you must first run `test_group` to create topics and produce data before running `subscribe_topic`.
 
-9. Ingest data again to see `subscribe_topic` consuming data.
+### 9. Ingest data again to see `subscribe_topic` consuming data.
 
 - Follow Step 7
 
-10. View Python source code
+### 10. View Python source code
 
 So far, we used Java apps included in PadoGrid. Let's now turn to Python. You can view the `apps/python_examples` directory from JupyterLab or from a terminal as follows.
+
+![Terminal](images/terminal.png) Terminal 1
 
 ```bash
 cd_app python_examples
@@ -176,7 +215,7 @@ The included files are described below.
 | `etc/kafka-consumer.properties` | Consumer specific properties     |
 | `etc/kafka-producer.properties` | Producer specific properties     |
 
-11. Run Jupyter Notebook examples
+### 11. Run Jupyter Notebook examples
 
 - Change folder: `apps/python_examples`
 - Open and run `consumer_perf_test.ipynb`
@@ -185,30 +224,39 @@ The included files are described below.
 
 :pencil2: The `ccloud_lib.py` file found in `apps/python_examples` is part of the Confluent examples downlodable from the Confluent GitHub repo. Please see the [Confluent Examples](#Confluent-Examples) section for details.
 
-12. Run Python from terminal
+### 12. Run Python from terminal
 
 Subscribe `nw.customers`
+
+![Terminal](images/terminal.png) Terminal 2
 
 ```bash
 cd_app python_examples
 ./consumer_perf_test.py -f etc/kafka-consumer.properties -t nw.customers
 ```
 
-Subscribe `nw.orders`
-
-```bash
-cd_app python_examples
-./consumer_perf_test.py -f etc/kafka-consumer.properties -t nw.orders
-```
-
 Ingest data into `nw.customers`
+
+![Terminal](images/terminal.png) Terminal 1
 
 ```bash
 cd_app python_examples
 ./producer_customer.py -f etc/kafka-producer.properties -t nw.customers
 ```
 
+
+Subscribe `nw.orders`
+
+![Terminal](images/terminal.png) Terminal 2
+
+```bash
+cd_app python_examples
+./consumer_perf_test.py -f etc/kafka-consumer.properties -t nw.orders
+```
+
 Ingest data into `nw.orders`
+
+![Terminal](images/terminal.png) Terminal 1
 
 ```bash
 cd_app python_examples
@@ -219,6 +267,8 @@ You can also run `perf_test` to produce and consume data as before. Both Java an
 
 Consume Python generated data using `perf_test` (Java):
 
+![Terminal](images/terminal.png) Terminal 2
+
 ```bash
 cd_app perf_test/bin_sh
 ./subscribe_topic nw.customers
@@ -226,6 +276,8 @@ cd_app perf_test/bin_sh
 ```
 
 Produce data using Java for the Python consumer:
+
+![Terminal](images/terminal.png) Terminal 1
 
 ```bash
 cd_app perf_test/bin_sh
@@ -236,18 +288,22 @@ cd_app perf_test/bin_sh
 
 Confluent provides client examples that you can also try out in this tutorial. This section provides instructions for downloading and running Confluent examples. We'll focus on Java examples only.
 
-1. Clone Confluent examples
+### E1. Clone Confluent examples
 
 Download the Confluent client examples.
+
+![Terminal](images/terminal.png) Terminal 1
 
 ```bash
 cd_app python_examples
 git clone https://github.com/confluentinc/examples.git
 ```
 
-2. Build Java examples
+### E2. Build Java examples
 
 From a terminal, run the following:
+
+![Terminal](images/terminal.png) Terminal 1
 
 ```bash
 cd_app python_examples/examples/clients/avro
@@ -281,23 +337,9 @@ If you see the errors shown above, then add version numbers in the `pom.xml` as 
    ...
 ```
 
-3. Optional: Start Confluent Control Center
+### E3. Run Java consumer
 
-Optionally, you can start Confluent Control Center to create and monitor topics.
-
-```bash
-control-center-start $CONFLUENT_HOME/etc/confluent-control-center/control-center.properties
-```
-
-4. Optional: Check Confluent Control Center
-
-- URL: http://localhost:9021
-- Select the **transactions** topic
-- Select the **Messages** tab to monitor the **transactions** messages.
-
-5. Run Java consumer
-
-From a terminal, run the following:
+![Terminal](images/terminal.png) Terminal 2
 
 ```bash
 cd_app python_examples/examples/clients/avro
@@ -305,9 +347,9 @@ mvn exec:java -Dexec.mainClass=io.confluent.examples.clients.basicavro.ConsumerE
               -Dexec.args="../../../etc/kafka-consumer.properties"
 ```
 
-6. Run Java publisher
+### E4. Run Java publisher
 
-From a terminal, run the following:
+![Terminal](images/terminal.png) Terminal 1
 
 ```bash
 cd_app python_examples/examples/clients/avro
@@ -315,11 +357,33 @@ mvn exec:java -Dexec.mainClass=io.confluent.examples.clients.basicavro.ProducerE
               -Dexec.args="../../../etc/kafka-producer.properties"
 ```
 
+### E5. Optional: Start Confluent Control Center
+
+Optionally, you can start Confluent Control Center to create and monitor topics.
+
+Open a new terminal, Terminal 4. From that terminal, execute the following.
+
+![Terminal](images/terminal.png) Terminal 4
+
+```bash
+# In Terminal 4, make sure to change workspace context as we did for other terminals
+switch_rwe rwe-tutorial bundle-confluent-7-examples-python
+
+# The following command blocks.
+control-center-start $CONFLUENT_HOME/etc/confluent-control-center/control-center.properties
+```
+
+### E6. Optional: Check Confluent Control Center
+
+- URL: <http://localhost:9021>
+- Select the **transactions** topic
+- Select the **Messages** tab to monitor the **transactions** messages.
+
 ## Confluent Schema Registry REST API
 
 This section provides Schema Resitry REST API examples obtained from [1]. From your terminal, set `TOPIC` to the name of topic that you want to apply the examples.
 
-- URL: http://localhost:8081/
+- URL: <http://localhost:8081/>
 
 ```bash
 # topic 
@@ -423,6 +487,8 @@ curl -sX DELETE http://localhost:8081/subjects/$TOPIC-value | jq .
 ```
 
 ## Teardown
+
+From your host OS, execute the following commands.
 
 ```bash
 kill_cluster
