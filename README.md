@@ -94,7 +94,7 @@ From one of the terminals in the browser, create and start a Kafka cluster.
 ![Terminal](images/terminal.png) Terminal 1
 
 ```bash
-make_cluster -product confluent
+create_cluster -product confluent
 switch_cluster myconfluent
 start_cluster
 ```
